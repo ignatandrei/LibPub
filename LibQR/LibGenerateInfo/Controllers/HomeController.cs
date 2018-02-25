@@ -26,6 +26,7 @@ namespace LibGenerateInfo.Controllers
         }
         public async Task<ActionResult> Book(string id)
         {
+            id = id.Replace("_", "/");
             var book = LibTimeInfo.FromString(id);
             var b = new InfoBook(id.ToString());
             await b.GetInfoFromId();
