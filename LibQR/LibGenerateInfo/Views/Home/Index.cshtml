@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Interfata pentru ADMIN : Generate Code</h2>
+        
+        <form method="get" asp-action="GenerateCode">
+            Code:
+            <input id="id" name="id" type="text" value="88046" />
+            Minutes :
+            <input id="minutes" name ="minutes" type="text" value="1" />
+            <input type="submit" value="Generate!" />
+        </form>
+
+    </div>
+    
+</div>
