@@ -26,9 +26,10 @@ namespace LibGenerateInfo.Controllers
         }
         public async Task<ActionResult> Book(string id)
         {
-            id = id.Replace("_", "/");
+            var s = Request.QueryString;
+            id += s;
             var book = LibTimeInfo.FromString(id);
-            var b = new InfoBook(id.ToString());
+            var b = new InfoBook(book.Info);
             await b.GetInfoFromId();
             return Content(" aici apare cartea " + b.Title);
         }

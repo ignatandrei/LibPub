@@ -57,7 +57,8 @@
     <script>
 
         function seebook() {
-            window.open("/home/book/" + '@infoTime.Generate().Replace("/","_")');
+            window.alert(22);
+            window.open("/home/book/" + encodeURI('@infoTime.Generate()'));
             
                 }
     </script>
