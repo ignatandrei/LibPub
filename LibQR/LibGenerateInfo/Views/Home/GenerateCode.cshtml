@@ -51,15 +51,25 @@
     </dl>
 </div>
 <div>
-
+    <div id="qrcode"></div>
 </div>
 @section Scripts{
-    <script>
+    <script src="~/js/qrcode.min.js"></script>
 
+    <script>
+        var link = "http://fsq.apphb.com/home/book/" + '@infoTime.Info';
+        var qrcode = new QRCode("qrcode", {
+            text: link,
+            width: 128,
+            height: 128,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
         function seebook() {
-            window.alert(22);
-            window.open("/home/book/" + ('@infoTime.Info'));
-            
+        
+            window.open(link);
+
                 }
     </script>
 }
