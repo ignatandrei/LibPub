@@ -13,7 +13,7 @@ namespace LIbTests
         {
             var test = new LibTimeInfo();
             test.Info = "this is now";
-            test.MaxDate = DateTime.Now.AddDays(1);
+            test.MaxDate = DateTime.Now.AddMinutes(3);
             var test1 = LibTimeInfo.FromString(test.Generate());
             Assert.AreEqual(test.MaxDate.ToString("yyyyMMddHHmmss"), test1.MaxDate.ToString("yyyyMMddHHmmss"));
             Assert.AreEqual(test.Info, test1.Info);

@@ -90,12 +90,19 @@ namespace LibTimeCreator
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var now = SystemTime.Now();
-            if (MaxDate< now)
+            if (long.Parse( MaxDate.ToString(formatDate)) < long.Parse (now.ToString(formatDate)))
                 yield return new ValidationResult("date not good");
         }
         public bool IsValid()
         {
             return !Validate(null).Any();
+        }
+        public TimeSpan Diff()
+        {
+            //no time difference
+            var dt = DateTime.ParseExact(MaxDate.ToString(formatDate),formatDate,null);
+            var now= DateTime.ParseExact(SystemTime.Now().ToString(formatDate), formatDate, null);
+            return dt.Subtract(now);
         }
     }
 }

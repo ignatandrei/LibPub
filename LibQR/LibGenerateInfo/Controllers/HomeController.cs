@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using LibGenerateInfo.Models;
 using LibTimeCreator;
 using LibInfoBook;
+using System.Collections.Concurrent;
 
 namespace LibGenerateInfo.Controllers
 {
@@ -26,34 +27,55 @@ namespace LibGenerateInfo.Controllers
         }
         public async Task<ActionResult> Book(string id)
         {
+            Guid g = Guid.Parse(id);
             //TODO: replace with database
-            string base64 = "";
-            var lines = await System.IO.File.ReadAllLinesAsync("a.txt");
-            foreach(var line in lines)
-            {
-                if (line.StartsWith(id + "-"))
-                {
-                    base64 = line.Replace(id + "-", "");
-                    break;
-                }
-            }
-            if (base64 == "")
+            if(!dict.ContainsKey(g))
                 return Content("not found");
 
-            var book = LibTimeInfo.FromString(base64);
-            var b = new InfoBook(book.Info);
+            string base64 = dict[g];
+            //var lines = await System.IO.File.ReadAllLinesAsync("a.txt");
+            //foreach(var line in lines)
+            //{
+            //    if (line.StartsWith(id + "-"))
+            //    {
+            //        base64 = line.Replace(id + "-", "");
+            //        break;
+            //    }
+            //}
+            //if (base64 == "")
+            //    return Content("not found");
+
+            var timeInfo = LibTimeInfo.FromString(base64);
+            if (!timeInfo.IsValid())
+            {
+                return Content("nu aveti dreptul sa vedeti cartea");
+            }
+            string time = "";
+            var ts = timeInfo.Diff();
+            if(ts.TotalMinutes<1)
+            {
+                time = "secunde ramase " + ts.TotalSeconds.ToString("0#");
+            }
+            else
+            {
+                time = "minute ramase " + ts.TotalMinutes.ToString("0#");
+            }
+            var b = new InfoBook(timeInfo.Info);
             await b.GetInfoFromId();
-            return Content(" aici apare cartea " + b.Title);
+            
+            return Content(" aici apare cartea " + b.Title + ";"+time);
         }
+        static ConcurrentDictionary<Guid, string> dict = new ConcurrentDictionary<Guid, string>();
         public async Task<ActionResult> GenerateCode(int id, int minutes)
         {
             
             var li = new LibTimeInfo(minutes);
             li.Info = id.ToString();
             //TODO: replace with database
-            var t = Guid.NewGuid().ToString("N");
-            await System.IO.File.AppendAllTextAsync("a.txt", t + "-" + li.Generate());
-            li.Info = t;
+            var t = Guid.NewGuid();//.ToString("N");
+            //await System.IO.File.AppendAllTextAsync("a.txt", t + "-" + li.Generate());
+            dict[t] = li.Generate();
+            li.Info = t.ToString("N");
             var b = new InfoBook(id.ToString());
             await b.GetInfoFromId();
             
