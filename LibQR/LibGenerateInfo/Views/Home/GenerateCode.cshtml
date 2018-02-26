@@ -6,6 +6,7 @@
     ViewData["Title"] = "GenerateCode";
     var infoTime = Model.Item1;
     var infoBook = Model.Item2;
+    var linkBook = $"http://fsq.apphb.com/home/book/{infoTime.Info}";
 }
 
 <h2>GenerateCode</h2>
@@ -44,8 +45,11 @@
         <dd>
             @infoTime.MaxDate.ToString("dd MM yyyy HH:mm:ss")
         </dd>
+        <dt>
+            Link 
+        </dt>
         <dd>
-            <a href="#" onclick="javascript:seebook()">See book</a>
+            <a href='@linkBook' target="_blank">@linkBook</a>
         </dd>
 
     </dl>
@@ -57,7 +61,7 @@
     <script src="~/js/qrcode.min.js"></script>
 
     <script>
-        var link = "http://fsq.apphb.com/home/book/" + '@infoTime.Info';
+        var link = "@linkBook";
         var qrcode = new QRCode("qrcode", {
             text: link,
             width: 128,

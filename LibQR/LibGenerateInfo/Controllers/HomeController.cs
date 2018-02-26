@@ -47,6 +47,7 @@ namespace LibGenerateInfo.Controllers
         }
         public async Task<ActionResult> GenerateCode(int id, int minutes)
         {
+            
             var li = new LibTimeInfo(minutes);
             li.Info = id.ToString();
             //TODO: replace with database
