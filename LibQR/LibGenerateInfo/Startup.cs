@@ -24,8 +24,10 @@ namespace LibGenerateInfo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            var connection = @"Server=.;Database=QR;Trusted_Connection=True;ConnectRetryCount=0";
-            services.AddDbContext<QRContext>(options => options.UseSqlServer(connection));
+            //var connection = @"Server=.;Database=QR;Trusted_Connection=True;ConnectRetryCount=0";
+            //services.AddDbContext<QRContext>(options => options.UseSqlServer(connection));
+            var connection = @"Data Source=data.sqlite3;";
+            services.AddDbContext<QRContext>(options => options.UseSqlite(connection));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

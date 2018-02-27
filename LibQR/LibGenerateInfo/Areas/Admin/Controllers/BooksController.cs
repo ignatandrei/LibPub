@@ -60,6 +60,11 @@ namespace ibGenerateInfo.Areas.Admin.Controllers
             var idBooks = tinRead.Split(Environment.NewLine);
             foreach (var id in idBooks)
             {
+                var exists =await _context.Book.FirstOrDefaultAsync(it => it.IdtinRead == id);
+                if(exists != null)
+                {
+                    continue;
+                }
                 var book = new Book();
                 book.IdtinRead = id;
                 book.IsCorrect = true;

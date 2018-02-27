@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -12,8 +13,29 @@ namespace LibGenerateInfo
 {
     public class Program
     {
+        static async Task GetDatabase()
+        {
+            var url = "https://raw.githubusercontent.com/ignatandrei/LibPub/master/data/data.sqlite3";
+            using (var client = new HttpClient())
+            {
+
+                using (var result = await client.GetAsync(url))
+                {
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var bytes = await result.Content.ReadAsByteArrayAsync();
+                        File.WriteAllBytes("data.sqlite3", bytes);
+                    }
+
+                }
+            }
+        }
         public static void Main(string[] args)
         {
+            if (!File.Exists("data.sqlite3"))
+            {
+                GetDatabase().GetAwaiter().GetResult();   
+            }
             BuildWebHost(args).Run();
         }
 
