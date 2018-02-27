@@ -14,8 +14,18 @@ namespace LibGenerateInfo.Controllers
     
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            
+            if (!File.Exists("data.sqlite3"))
+            {
+            try{
+                await Program.GetDatabase();   
+                }
+                catch(Exception ex){
+                return Content( ex.Message);
+                }
+            }
             return View();
         }
 
