@@ -17,7 +17,7 @@ namespace LibGenerateInfo.Controllers
         public async Task<IActionResult> Index()
         {
             
-            if (!File.Exists("data.sqlite3"))
+            if (!System.IO.File.Exists("data.sqlite3"))
             {
             try{
                 await Program.GetDatabase();   
