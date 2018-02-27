@@ -25,7 +25,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LibInfoBook\LibInfoBook.csproj" />
+    <ProjectReference Include="..\LibQRDAL\LibQRDAL.csproj" />
     <ProjectReference Include="..\LibTimeCreator\LibTimeCreator.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\Models\" />
   </ItemGroup>
 
 </Project>

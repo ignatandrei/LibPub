@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+<ol type="A">
+    <li>
+        Cititori
+        <ol>
+
+            <li>
+                <a asp-controller="SimpleUsers" asp-action="Create">Adaugati</a>
+            </li>
+            <li>
+                <a asp-controller="SimpleUsers" asp-action="Index"> List</a>
+            </li>
+        </ol>
+    </li>
+    <li>
+        Administratori
+        <ol>
+
+            <li>
+                <a asp-controller="SimpleUsers" asp-action="Create">Adaugati</a>
+            </li>
+            <li>
+                <a asp-controller="SimpleUsers" asp-action="IndexAdmin">List</a>
+            </li>
+        </ol>
+    </li>
+    <li>
+        eBooks
+        <ol>
+
+            <li>
+                <a asp-controller="Books" asp-action="Create">Adaugati</a>
+            </li>
+            <li>
+                <a asp-controller="Books" asp-action="IndexAdmin">List</a>
+            </li>
+        </ol>
+    </li>
+</ol>
+
