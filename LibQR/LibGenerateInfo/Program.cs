@@ -33,9 +33,9 @@ namespace LibGenerateInfo
         }
         public static void Main(string[] args)
         {
-            if (!File.Exists("data.sqlite3"))
+            //if (!File.Exists("data.sqlite3"))
             {
-                var q =GetDatabase().GetAwaiter().GetResult();   
+               // var q =GetDatabase().GetAwaiter().GetResult();   
             }
             BuildWebHost(args).Run();
         }
