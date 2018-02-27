@@ -13,7 +13,7 @@ namespace LibGenerateInfo
 {
     public class Program
     {
-        static async Task GetDatabase()
+        public static async Task<bool> GetDatabase()
         {
             var url = "https://raw.githubusercontent.com/ignatandrei/LibPub/master/data/data.sqlite3";
             using (var client = new HttpClient())
@@ -29,12 +29,13 @@ namespace LibGenerateInfo
 
                 }
             }
+            return true;
         }
         public static void Main(string[] args)
         {
             if (!File.Exists("data.sqlite3"))
             {
-                GetDatabase().GetAwaiter().GetResult();   
+                var q =GetDatabase().GetAwaiter().GetResult();   
             }
             BuildWebHost(args).Run();
         }
