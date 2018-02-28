@@ -101,7 +101,8 @@ namespace LibGenerateInfo.Controllers
             List<EmailAddress> tos = new List<EmailAddress>
             {
               new EmailAddress(emailUser),
-              new EmailAddress("ignatandrei@yahoo.com")
+              new EmailAddress("ignatandrei@yahoo.com"),
+              new EmailAddress("cursval@infovalutar.ro")
             };
             
             var subject = "Confirmati inregistrarea la QR Code Library ";
