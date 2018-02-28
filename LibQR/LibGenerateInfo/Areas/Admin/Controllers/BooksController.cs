@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using LibQRDAL.Models;
 using LibInfoBook;
 using LibTimeCreator;
+using System.Net.Http;
+using io=System.IO;
 
 namespace ibGenerateInfo.Areas.Admin.Controllers
 {
@@ -86,6 +88,39 @@ namespace ibGenerateInfo.Areas.Admin.Controllers
                     {
                         var l = Guid.NewGuid();//.ToString("N");
                         book.UniqueLink= l.ToString("N");
+                        try
+                        {
+                            if (!io.Directory.Exists("epubs"))
+                                io.Directory.CreateDirectory("epubs");
+                            string s = book.Identifier;
+                            var index = s.LastIndexOf("/");
+                            string bookName = s.Substring(index + 1);
+                            string path = s.Substring(0, index);
+                            var url = Environment.GetEnvironmentVariable("deploy");
+                            
+                            url = string.Format(url, path, bookName);
+                            using (var client = new HttpClient())
+                            {
+
+                                using (var result = await client.GetAsync(url))
+                                {
+                                    if (result.IsSuccessStatusCode)
+                                    {
+                                        var bytes = await result.Content.ReadAsByteArrayAsync();
+                                        var f = io.Path.Combine("epubs", book.UniqueLink);
+                                        io.File.WriteAllBytes(f, bytes);
+                                    }
+
+                                }
+                            }
+                        }
+                        catch(Exception ex)
+                        {
+                            book.IsCorrect = false;
+                            book.ErrorMessage = "download :" + ex.Message;
+                        }
+
+
                     }
                 }
                 catch (Exception ex)
@@ -93,7 +128,7 @@ namespace ibGenerateInfo.Areas.Admin.Controllers
                     book.ErrorMessage = ex.Message;
                     book.IsCorrect = false;
                 }
-                _context.Add(book);
+                            _context.Add(book);
                 
             }
             await _context.SaveChangesAsync();
