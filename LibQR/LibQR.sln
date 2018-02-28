@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibInfoBook", "LibInfoBook\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibGenerateInfo", "LibGenerateInfo\LibGenerateInfo.csproj", "{76E8F432-86FD-48D4-95E2-273E41074EA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibQRDAL", "LibQRDAL\LibQRDAL.csproj", "{9F921DC2-F79A-46BF-8285-0EFF23005810}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibQRDAL", "LibQRDAL\LibQRDAL.csproj", "{9F921DC2-F79A-46BF-8285-0EFF23005810}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadEpub", "ReadEpub\ReadEpub.csproj", "{A5E2D2CF-AA44-4EC0-B207-FE3CB56DED44}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{9F921DC2-F79A-46BF-8285-0EFF23005810}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F921DC2-F79A-46BF-8285-0EFF23005810}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F921DC2-F79A-46BF-8285-0EFF23005810}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5E2D2CF-AA44-4EC0-B207-FE3CB56DED44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5E2D2CF-AA44-4EC0-B207-FE3CB56DED44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5E2D2CF-AA44-4EC0-B207-FE3CB56DED44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5E2D2CF-AA44-4EC0-B207-FE3CB56DED44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

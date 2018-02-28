@@ -9,6 +9,8 @@ using LibTimeCreator;
 using LibInfoBook;
 using System.Collections.Concurrent;
 using LibQRDAL.Models;
+using ReadEpub;
+using System.IO;
 
 namespace LibGenerateInfo.Controllers
 {
@@ -40,11 +42,20 @@ namespace LibGenerateInfo.Controllers
         public async Task<ActionResult> AllBook([FromServices]QRContext context, string id)
         {
             var b = context.Book.FirstOrDefault(it => it.UniqueLink == id);
+            
             if(b== null)
             {
                 return Content("no book");
             }
-            return View(b);
+            string pathFile = Path.Combine("epubs", b.UniqueLink);
+            if (!System.IO.File.Exists(pathFile))
+            {
+                return Content($"File for book does {b.Idbook} not exists");
+            }
+
+            var read = new ReadEpubFile(pathFile);
+            return View(read);
+
         }
         public async Task<ActionResult> Book(string id)
         {

@@ -27,6 +27,7 @@
     <ProjectReference Include="..\LibInfoBook\LibInfoBook.csproj" />
     <ProjectReference Include="..\LibQRDAL\LibQRDAL.csproj" />
     <ProjectReference Include="..\LibTimeCreator\LibTimeCreator.csproj" />
+    <ProjectReference Include="..\ReadEpub\ReadEpub.csproj" />
   </ItemGroup>
 
   <ItemGroup>

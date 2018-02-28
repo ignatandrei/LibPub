@@ -1,7 +1,17 @@
-﻿
+﻿@model ReadEpub.ReadEpubFile
 @{
     ViewData["Title"] = "AllBook";
 }
 
-<h2>AllBook</h2>
+<h1>@Model.Title</h1>
 
+<h1>@Model.Author</h1>
+<table>
+    @foreach (var cnt in Model.content)
+    {
+        <tr>
+            <td valign="top">@cnt.Title</td>
+            <td >@Html.Raw(cnt.HtmlContent)</td>
+        </tr>
+    }
+</table>
