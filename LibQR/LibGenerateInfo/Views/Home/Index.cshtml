@@ -1,13 +1,14 @@
 ﻿@model IEnumerable<LibQRDAL.Models.Book>
 @{
     ViewData["Title"] = "Home Page";
+    string jsQR = "";
 }
 
 
 <div class="row">
     <div class="col-md-6">
         <h2>QR BOOK</h2>
-        
+
         Lista cartilor :
         <table class="table">
             <thead>
@@ -24,18 +25,25 @@
             </thead>
             <tbody>
                 @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Creator)
-                    </td>
-                    <td>
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Creator)
+                        </td>
+                        <td>
+                            @{
+                                var linkBook = $"http://fsq.apphb.com/home/Allbook/{item.UniqueLink}";
+                                var divId = $"div{item.UniqueLink}";
+                                jsQR += $"GenerateQRCode('{divId}','{linkBook}');{Environment.NewLine}";
+                            }
+                            <div id="@divId"></div>
+
                     </td>
                 </tr>
-        }
+            }
             </tbody>
         </table>
 
@@ -56,3 +64,22 @@
     *@
 
 </div>
+@section Scripts{
+    <script src="~/js/qrcode.min.js"></script>
+
+    <script>
+        function GenerateQRCode(divId, link) {
+
+            var qrcode = new QRCode(divId, {
+                text: link,
+                width: 128,
+                height: 128,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+        }
+        @Html.Raw(jsQR);
+    </script>
+}
