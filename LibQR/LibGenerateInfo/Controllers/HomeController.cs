@@ -38,7 +38,7 @@ namespace LibGenerateInfo.Controllers
 
             return View();
         }
-
+        
         public async Task<ActionResult> AllBook([FromServices]QRContext context, string id)
         {
             var b = context.Book.FirstOrDefault(it => it.UniqueLink == id);
@@ -47,10 +47,19 @@ namespace LibGenerateInfo.Controllers
             {
                 return Content("no book");
             }
-            string pathFile = Path.Combine("epubs", b.UniqueLink);
+            string pathFile = Path.Combine("epubs",$"{b.UniqueLink}_{b.Idbook.ToString("00#")}.epub");
             if (!System.IO.File.Exists(pathFile))
             {
-                return Content($"File for book does {b.Idbook} not exists");
+                var pathFileFirst = Path.Combine("epubs", b.UniqueLink);
+                if (System.IO.File.Exists(pathFileFirst)){
+                    System.IO.File.Copy(pathFileFirst, pathFile);
+                    System.IO.File.Delete(pathFileFirst);
+                }
+                
+            }
+            if (!System.IO.File.Exists(pathFile))
+            {
+                return Content($"File for book {id} not exists");
             }
 
             var read = new ReadEpubFile(pathFile);
