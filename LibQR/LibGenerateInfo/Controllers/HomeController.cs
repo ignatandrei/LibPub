@@ -18,6 +18,8 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Cryptography;
 using System.Text;
 using HashidsNet;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 namespace LibGenerateInfo.Controllers
 {
@@ -91,7 +93,23 @@ namespace LibGenerateInfo.Controllers
             
             var hashids = new Hashids(strSalt);
             var id = hashids.EncodeLong(user.Iduser);
-            return Content("please check your email !"+id+ "!");
+            string url = "http://fsq.apphb.com/Home/GeneratedEmail/" + id;
+            var apiKey = Environment.GetEnvironmentVariable("SendGridKey");
+            
+            var client = new SendGridClient(apiKey);
+            var from = new EmailAddress("cursval@infovalutar.ro","Ignat Andrei - QR");
+            List<EmailAddress> tos = new List<EmailAddress>
+            {
+              new EmailAddress(emailUser),
+              new EmailAddress("ignatandrei@yahoo.com")
+            };
+            
+            var subject = "Confirmati inregistrarea la QR Code Library ";
+            var htmlContent = $"Va rog <strong>confirmati </strong> inscrierea la QR Code library apasand <a href='{url}'>{url}</a>. <br />Multumim!";
+            var msg = MailHelper.CreateSingleEmailToMultipleRecipients(from, tos, subject, "", htmlContent, false);
+            var response = await client.SendEmailAsync(msg);
+            
+            return Content("Va rugam verificat emailul( inclusiv spam/ junk) pentru a confirma adresa de email !");
         }
         [AllowAnonymous]
         public async Task<ActionResult> GeneratedEmail([FromServices]QRContext context,string id)

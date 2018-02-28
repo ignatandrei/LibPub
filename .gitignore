@@ -288,3 +288,4 @@ __pycache__/
 *.xsd.cs
 /LibQR/LibGenerateInfo/a.txt
 /LibQR/LibGenerateInfo/epubs
+/LibQR/LibGenerateInfo/_PublishedWebsites/NetCoreWebApp
