@@ -1,0 +1,82 @@
+﻿@model LibQRDAL.Models.Book
+
+@{
+    ViewData["Title"] = "Details";
+    var linkBook = $"http://fsq.apphb.com/home/Allbook/{Model.UniqueLink}";
+
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Book</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.IdtinRead)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IdtinRead)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Creator)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Creator)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Identifier)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Identifier)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsCorrect)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsCorrect)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ErrorMessage)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ErrorMessage)
+        </dd>
+        <dt>
+            Link
+        </dt>
+        <dd>
+            <a href="@linkBook" target="_blank">@linkBook</a>
+        </dd>
+    </dl>
+</div>
+<div>
+
+    <a asp-action="Index">Back to List</a>
+</div>
+<div>
+    <div id="qrcode"></div>
+</div>
+@section Scripts{
+    <script src="~/js/qrcode.min.js"></script>
+
+    <script>
+        var link = "@linkBook";
+        var qrcode = new QRCode("qrcode", {
+            text: link,
+            width: 128,
+            height: 128,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+        
+        
+    </script>
+    }

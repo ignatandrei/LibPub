@@ -1,0 +1,79 @@
+﻿@using LibTimeCreator;
+@using LibInfoBook;
+@model Tuple<LibTimeInfo, InfoBook>
+
+@{
+    ViewData["Title"] = "GenerateCode";
+    var infoTime = Model.Item1;
+    var infoBook = Model.Item2;
+    var linkBook = $"http://fsq.apphb.com/home/book/{infoTime.Info}";
+}
+
+<h2>GenerateCode</h2>
+
+<div>
+    <h4>InfoBook</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            ID
+        </dt>
+        <dd>
+            @infoBook.Id
+        </dd>
+        <dt>
+            Title
+        </dt>
+        <dd>
+            @infoBook.Title
+        </dd>
+        <dt>
+            Autor
+        </dt>
+        <dd>
+            @infoBook.Creator
+        </dd>
+        <dt>
+            Data curenta:
+        </dt>
+        <dd>
+            @DateTime.UtcNow.ToString("dd MM yyyy HH:mm:ss")
+        </dd>
+        <dt>
+            Linkul e valabil pina la
+        </dt>
+        <dd>
+            @infoTime.MaxDate.ToString("dd MM yyyy HH:mm:ss")
+        </dd>
+        <dt>
+            Link 
+        </dt>
+        <dd>
+            <a href='@linkBook' target="_blank">@linkBook</a>
+        </dd>
+
+    </dl>
+</div>
+<div>
+    <div id="qrcode"></div>
+</div>
+@section Scripts{
+    <script src="~/js/qrcode.min.js"></script>
+
+    <script>
+        var link = "@linkBook";
+        var qrcode = new QRCode("qrcode", {
+            text: link,
+            width: 128,
+            height: 128,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+        function seebook() {
+        
+            window.open(link);
+
+                }
+    </script>
+}

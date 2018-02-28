@@ -11,13 +11,20 @@ using System.Collections.Concurrent;
 using LibQRDAL.Models;
 using ReadEpub;
 using System.IO;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Cryptography;
+using System.Text;
+using HashidsNet;
 
 namespace LibGenerateInfo.Controllers
 {
     
     public class HomeController : Controller
     {
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromServices] QRContext context)
         {
             
             if (!System.IO.File.Exists("data.sqlite3"))
@@ -29,7 +36,9 @@ namespace LibGenerateInfo.Controllers
                 return Content( ex.Message);
                 }
             }
-            return View();
+            var b = context.Book.Where(it => it.IsCorrect).ToArray();
+
+            return View(b);
         }
 
         public IActionResult About()
@@ -38,7 +47,125 @@ namespace LibGenerateInfo.Controllers
 
             return View();
         }
-        
+        [AllowAnonymous]
+        public ActionResult Register()
+        {
+            //TODO: remember the book that he wants to see
+            return View();
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<ActionResult> Register([FromServices]QRContext context,string emailUser, string password)
+        {
+            //TODO: make a better way to register users
+            //TODO: use Google / Facebook authentication
+            //TODO: email valid
+            emailUser = emailUser?.ToLower();
+            var hash = getHash(password);
+            if (hash.Length > 500)
+                hash=hash.Substring(0,500);
+
+            var user=context.SimpleUser.FirstOrDefault(it => it.Email.ToLower() == emailUser);
+            if(user != null)
+            {
+                if(!user.ConfirmedByEmail)
+                    return Content($"email {emailUser} does exists . Check your email");
+
+                if(user.Password == hash)
+                {
+                    await SignUser(user);
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return Content("incorrect password. Press back and try again");
+                }
+            }
+            user = new SimpleUser();
+            user.Email = emailUser;
+            user.Name = emailUser;
+            user.Password = hash;
+            context.Add(user);  
+            await context.SaveChangesAsync();
+            var strSalt=Environment.GetEnvironmentVariable("deploy");
+            
+            var hashids = new Hashids(strSalt);
+            var id = hashids.EncodeLong(user.Iduser);
+            return Content("please check your email !"+id+ "!");
+        }
+        [AllowAnonymous]
+        public async Task<ActionResult> GeneratedEmail([FromServices]QRContext context,string id)
+        {
+            var strSalt = Environment.GetEnvironmentVariable("deploy");
+            
+            var hashids = new Hashids(strSalt);
+            long idUser = hashids.DecodeLong(id)[0];
+            var user = context.SimpleUser.FirstOrDefault(it => it.Iduser == idUser);
+            if(user == null)
+            {
+                return Content("user does not exists");
+            }
+            user.ConfirmedByEmail = true;
+            await context.SaveChangesAsync();
+
+            await SignUser(user);
+            return RedirectToAction("index");
+
+        }
+        [Authorize]
+        public ActionResult MyPage()
+        {
+            return View();
+        }
+        public async Task<ActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index");
+        }
+        private async Task SignUser(SimpleUser user)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Email),
+                new Claim("FullName", user.Email)
+            };
+            if (user.IsAdmin)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, "admin"));
+            }
+            var claimsIdentity = new ClaimsIdentity(
+                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var authProperties = new AuthenticationProperties
+            {
+                AllowRefresh = true,
+                // Refreshing the authentication session should be allowed.
+
+                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30),
+                // The time at which the authentication ticket expires. A 
+                // value set here overrides the ExpireTimeSpan option of 
+                // CookieAuthenticationOptions set with AddCookie.
+
+                IsPersistent = true,
+                // Whether the authentication session is persisted across 
+                // multiple requests. Required when setting the 
+                // ExpireTimeSpan option of CookieAuthenticationOptions 
+                // set with AddCookie. Also required when setting 
+                // ExpiresUtc.
+
+                IssuedUtc = DateTimeOffset.UtcNow,
+                // The time at which the authentication ticket was issued.
+
+                //RedirectUri = <string>
+                // The full path or absolute URI to be used as an http 
+                // redirect response value.
+            };
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                authProperties);
+        }
         public async Task<ActionResult> AllBook([FromServices]QRContext context, string id)
         {
             var b = context.Book.FirstOrDefault(it => it.UniqueLink == id);
@@ -107,9 +234,19 @@ namespace LibGenerateInfo.Controllers
             return Content(" aici apare cartea " + b.Title + ";"+time);
         }
         static ConcurrentDictionary<Guid, string> dict = new ConcurrentDictionary<Guid, string>();
-        public async Task<ActionResult> GenerateCode(int id, int minutes)
+        private static string getHash(string text)
         {
             
+            using (var sha256 = SHA512.Create())
+            {                
+                var hashedBytes = sha256.ComputeHash(Encoding.ASCII.GetBytes(text));
+                
+                return BitConverter.ToString(hashedBytes).ToLower();
+            }
+        }
+        public async Task<ActionResult> GenerateCode(int id, int minutes)
+        {
+            return Content("No longer available");
             var li = new LibTimeInfo(minutes);
             li.Info = id.ToString();
             //TODO: replace with database
