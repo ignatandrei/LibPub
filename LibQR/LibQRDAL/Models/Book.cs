@@ -12,5 +12,7 @@ namespace LibQRDAL.Models
         public string Identifier { get; set; }
         public bool IsCorrect { get; set; }
         public string ErrorMessage { get; set; }
+        public string DateAdd { get; set; }
+        public string UniqueLink { get; set; }
     }
 }

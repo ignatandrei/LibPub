@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LibQRDAL.Models;
 using LibInfoBook;
+using LibTimeCreator;
 
 namespace ibGenerateInfo.Areas.Admin.Controllers
 {
@@ -63,7 +64,7 @@ namespace ibGenerateInfo.Areas.Admin.Controllers
                 var exists =await _context.Book.FirstOrDefaultAsync(it => it.IdtinRead == id);
                 if(exists != null)
                 {
-                    continue;
+                    _context.Book.Remove(exists);                    
                 }
                 var book = new Book();
                 book.IdtinRead = id;
@@ -72,9 +73,20 @@ namespace ibGenerateInfo.Areas.Admin.Controllers
                 {
                     var b = new InfoBook(id);
                     await b.GetInfoFromId();
+                    var val = b.Validate(null).FirstOrDefault();
                     book.Title = b.Title;
                     book.Creator = b.Creator;
                     book.Identifier = b.Identifier;
+                    if(val != null)
+                    {
+                        book.IsCorrect = false;
+                        book.ErrorMessage = val.ErrorMessage;
+                    }
+                    else
+                    {
+                        var l = Guid.NewGuid();//.ToString("N");
+                        book.UniqueLink= l.ToString("N");
+                    }
                 }
                 catch (Exception ex)
                 {

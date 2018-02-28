@@ -8,6 +8,7 @@ using LibGenerateInfo.Models;
 using LibTimeCreator;
 using LibInfoBook;
 using System.Collections.Concurrent;
+using LibQRDAL.Models;
 
 namespace LibGenerateInfo.Controllers
 {
@@ -24,6 +25,16 @@ namespace LibGenerateInfo.Controllers
             ViewData["Message"] = "Your application description page.";
 
             return View();
+        }
+
+        public async Task<ActionResult> AllBook([FromServices]QRContext context, string id)
+        {
+            var b = context.Book.FirstOrDefault(it => it.UniqueLink == id);
+            if(b== null)
+            {
+                return Content("no book");
+            }
+            return View(b);
         }
         public async Task<ActionResult> Book(string id)
         {

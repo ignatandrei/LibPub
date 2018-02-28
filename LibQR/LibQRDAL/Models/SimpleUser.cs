@@ -11,5 +11,6 @@ namespace LibQRDAL.Models
         public string Password { get; set; }
         public bool ConfirmedByEmail { get; set; }
         public bool IsAdmin { get; set; }
+        public string DateAdd { get; set; }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -9,7 +11,7 @@ namespace LibInfoBook
 {
 
 
-    public class InfoBook
+    public class InfoBook: IValidatableObject
     {
         public InfoBook(string id)
         {
@@ -60,7 +62,18 @@ namespace LibInfoBook
 
         }
 
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (string.IsNullOrWhiteSpace(this.Creator))
+                yield return new ValidationResult($"{nameof(Creator)} trebuie sa existe");
 
+            if (string.IsNullOrWhiteSpace(this.Identifier))
+                yield return new ValidationResult($"{nameof(Identifier)} trebuie sa existe");
 
+            if (string.IsNullOrWhiteSpace(this.Title))
+                yield return new ValidationResult($"{nameof(Title)} trebuie sa existe");
+            
+
+        }
     }
 }

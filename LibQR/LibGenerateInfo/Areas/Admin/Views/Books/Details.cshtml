@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Details";
+    var linkBook = $"http://fsq.apphb.com/home/Allbook/{Model.UniqueLink}";
+
 }
 
 <h2>Details</h2>
@@ -46,9 +48,35 @@
         <dd>
             @Html.DisplayFor(model => model.ErrorMessage)
         </dd>
+        <dt>
+            Link
+        </dt>
+        <dd>
+            <a href="@linkBook" target="_blank">@linkBook</a>
+        </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Idbook">Edit</a> |
+
     <a asp-action="Index">Back to List</a>
 </div>
+<div>
+    <div id="qrcode"></div>
+</div>
+@section Scripts{
+    <script src="~/js/qrcode.min.js"></script>
+
+    <script>
+        var link = "@linkBook";
+        var qrcode = new QRCode("qrcode", {
+            text: link,
+            width: 128,
+            height: 128,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+        
+        
+    </script>
+    }
